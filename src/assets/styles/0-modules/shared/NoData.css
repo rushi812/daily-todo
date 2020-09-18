@@ -1,0 +1,19 @@
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  color: #a7a7a7d2;
+}
+.heading {
+  font-size: 2rem;
+  margin: 1rem;
+}
+.subHeading {
+  margin: 0;
+  font-style: italic;
+}
+.road-block-emoji {
+  opacity: 0.5;
+}

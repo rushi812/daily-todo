@@ -1,0 +1,165 @@
+"scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "electron-dev": "concurrently \"cross-env BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron-pack": "electron-builder -c.extraMetadata.main=build/electron.js",
+    "preelectron-pack": "react-scripts build"
+}
+
+
+"scripts": {
+    "start": "react-scripts start",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron": "electron .",
+    "react-build": "react-scripts build",
+    "release": "yarn react-build && electron-builder --publish=always",
+    "build": "yarn react-build",
+    "dist": "NODE_ENV=development electron-builder -m"
+  }
+
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test --env=jsdom",
+    "react-eject": "react-scripts eject",
+    "electron-build": "electron-builder",
+    "release": "yarn react-build && electron-builder --publish=always",
+    "build": "yarn react-build && yarn electron-build",
+    "start": "concurrently \"cross-env BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\""
+
+
+    "build": {
+    "asar": true,
+    "productName": "dailyTodo",
+    "appId": "com.upforce.dailyTodo",
+    "extends": null,
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        {
+          "target": "dmg"
+        }
+      ],
+      "icon": "public/todoIcon.png",
+      "type": "distribution"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "msi"
+      ],
+      "icon": "public/todoIcon.png"
+    },
+    "compression": "maximum",
+    "files": [
+      {
+        "from": ".",
+        "to": ".",
+        "filter": [
+          "electron",
+          "build",
+          "package.json"
+        ]
+      }
+    ],
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    }
+  },
+
+   "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not ie <= 11",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+
+
+      "firebase": "^7.7.0",
+
+
+  componentDidMount() {
+    let interval = null;
+    if (interval) clearInterval(interval);
+    interval = setInterval(() => {
+      const { changedMorningTime, changedEveningTime } = this.props;
+      const currentTime = moment().format('LT');
+      const morningTime = moment(changedMorningTime).format('LT');
+      const eveningTime = moment(changedEveningTime).format('LT');
+      if (morningTime === currentTime || eveningTime === currentTime) {
+        notifyMe(morningTime, eveningTime);
+      }
+    }, 60 * 1000);
+    const {
+      user,
+      fetchLoggedInUserData,
+      fetchTodos,
+      fetchPreviousDayTodos,
+      date,
+    } = this.props;
+
+    const previousDay = moment(moment(new Date()).subtract(1, 'days')).format('DDMMYYYY');
+    const lastFriday = moment(moment(new Date()).subtract(3, 'days')).format('DDMMYYYY');
+
+    if (Object.keys(user).length === 0) {
+      firebase.auth().onAuthStateChanged(currentUser => {
+        if (currentUser) {
+          fetchLoggedInUserData(currentUser);
+          fetchTodos(currentUser, date);
+          if (moment(new Date()).format('dddd') === 'Monday') {
+            fetchPreviousDayTodos(currentUser, lastFriday);
+          } else {
+            fetchPreviousDayTodos(currentUser, previousDay);
+          }
+        }
+      });
+    }
+  }
+
+
+
+
+
+
+    const previousDay = moment(moment(new Date()).subtract(1, 'days')).format('DDMMYYYY');
+  const lastFriday = moment(moment(new Date()).subtract(3, 'days')).format('DDMMYYYY');
+
+  useEffect(() => {
+    let interval = null;
+    if (interval) clearInterval(interval);
+    interval = setInterval(() => {
+      const morningTime = moment(changedMorningTime).format('LT');
+      const eveningTime = moment(changedEveningTime).format('LT');
+      const currentTime = moment().format('LT');
+      if (morningTime === currentTime || eveningTime === currentTime) {
+        notifyMe(morningTime, eveningTime);
+      }
+    }, 10000);
+  });
+
+  useEffect(() => {
+    if (Object.keys(user).length === 0) {
+      firebase.auth().onAuthStateChanged(currentUser => {
+        if (currentUser) {
+          fetchLoggedInUserData(currentUser);
+          fetchTodos(currentUser, date);
+          if (moment(new Date()).format('dddd') === 'Monday') {
+            fetchPreviousDayTodos(currentUser, lastFriday);
+          } else {
+            fetchPreviousDayTodos(currentUser, previousDay);
+          }
+        }
+      });
+    }
+  });
